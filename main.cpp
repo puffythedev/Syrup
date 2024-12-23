@@ -1,6 +1,6 @@
-#include "commands/commands.hpp"
-#include <dpp/dpp.h>
+#include <syrup.hpp>
 
+std::map<std::string, Command*> commands;
 std::string readFile(std::string name) {
     std::ifstream file(name);
     if (!file.is_open()) {
@@ -12,11 +12,11 @@ std::string readFile(std::string name) {
     return ss.str();
 }
 
-std::map<std::string, func> commands;
-
 void collect(){
-    commands["ping"] = c_ping;
-    commands["roleall"] = c_roleall;
+    commands["ping"] = std::move(new Ping());
+    commands["roleall"] = std::move(new Roleall());
+    commands["help"] = std::move(new Help());
+    commands["clear"] = std::move(new Clear());
 }
 
 int main() {
@@ -34,7 +34,10 @@ int main() {
 	 
 	bot.on_slashcommand([&bot](const dpp::slashcommand_t& event) -> dpp::task<void> {
         if(commands.find(event.command.get_command_name()) != commands.end()){
-            co_await commands[event.command.get_command_name()](bot, event);
+            Command* cmd = commands[event.command.get_command_name()];
+
+            co_await cmd->Execute(bot, event);
+
             co_return;
         } else {
             dpp::message msg("Command not found");
@@ -44,15 +47,28 @@ int main() {
             co_return;
         }
 	});
+
+    bot.on_select_click([&bot](const dpp::select_click_t & event) -> dpp::task<void> {
+         if(event.custom_id == "helpcmd")
+            co_await help_eventA(bot, event);
+        co_return;
+    });
 	 
-	bot.on_ready([&bot](const dpp::ready_t& event) {
+	bot.on_ready([&bot](const dpp::ready_t& event) -> dpp::task<void> {
 	    if (dpp::run_once<struct register_bot_commands>()) {
             dpp::slashcommand roleall("roleall", "give all users a role", bot.me.id);
             roleall.add_option(dpp::command_option(dpp::co_role, "role", "Role to distribute", true));
+            dpp::slashcommand clear("clear", "Delete a set of messages", bot.me.id);
+            clear.add_option(dpp::command_option(dpp::co_string, "amount", "Amount of messages to clear", true));
+            dpp::slashcommand ping("ping", "Ping pong!", bot.me.id);
+            dpp::slashcommand help("help", "Show all commands!", bot.me.id);
+            
+            bot.global_bulk_command_create({ roleall, clear, ping, help });
 
-            bot.global_command_create(dpp::slashcommand("ping", "Ping pong!", bot.me.id));
-            bot.global_command_create(roleall);
+            bot.set_presence(dpp::presence(dpp::ps_online, dpp::at_watching, "the chats!"));
 	    }
+
+        co_return;
 	});
 
 	bot.start(dpp::st_wait);

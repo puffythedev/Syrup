@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}",
                 "C:\\Users\\Administrator\\AppData\\Local\\Packages\\CanonicalGroupLimited.Ubuntu24.04LTS_79rhkp1fndgsc\\LocalState\\rootfs\\usr\\local\\include",
-                "${workspaceFolder}"
+                "${workspaceFolder}",
+                "${workspaceFolder}/includes"
             ],
             "defines": [
                 "DPP_CORO",

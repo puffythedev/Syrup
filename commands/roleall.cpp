@@ -1,20 +1,13 @@
 #include <dpp/dpp.h>
+#include <commands/roleall.hpp>
 
-dpp::coroutine<void> c_roleall(dpp::cluster& bot, const dpp::slashcommand_t& event) {
+dpp::task<void> Roleall::Execute(dpp::cluster& bot, const dpp::slashcommand_t& event) {
     dpp::snowflake channel = event.command.channel_id;
     dpp::channel* c = dpp::find_channel(channel);
 	dpp::confirmation_callback_t confirmation = co_await bot.co_guild_get(event.command.guild_id);
 	dpp::guild* server;
-
-/*    if(!confirmation.is_error()){
-        server = confirmation.get<dpp::guild>();
-        server.rehash_members();
-    }
-    else {
-        std::cout << confirmation.get_error().human_readable << "\n";
-        co_return;
-    }
- */   server = dpp::find_guild(event.command.guild_id);
+    
+    server = dpp::find_guild(event.command.guild_id);
     if (c && c->get_user_permissions(event.command.member).can(dpp::p_manage_roles)) {
         event.reply("Adding role to members...");
         for(auto& [id, member] : server->members){

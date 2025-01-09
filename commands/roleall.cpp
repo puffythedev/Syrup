@@ -11,7 +11,6 @@ dpp::task<void> Roleall::Execute(dpp::cluster& bot, const dpp::slashcommand_t& e
     if (c && c->get_user_permissions(event.command.member).can(dpp::p_manage_roles)) {
         event.reply("Adding role to members...");
         for(auto& [id, member] : server->members){
-            std::cout << member.user_id << "\n";
             dpp::snowflake role = std::get<dpp::snowflake>(event.get_parameter("role"));
             bool has = false;
             auto roles = member.get_roles();

@@ -17,9 +17,12 @@ void collect(){
     commands["roleall"] = std::move(new Roleall());
     commands["help"] = std::move(new Help());
     commands["clear"] = std::move(new Clear());
+    commands["balance"] = std::move(new Balance());
 }
 
 int main() {
+    std::signal(SIGINT, signalHandler);
+    dbInit();
     std::string token = readFile(".token");
 
 	dpp::cluster bot(token, dpp::intents::i_all_intents, 0U, 0U, 1U, false);
@@ -58,12 +61,18 @@ int main() {
 	    if (dpp::run_once<struct register_bot_commands>()) {
             dpp::slashcommand roleall("roleall", "give all users a role", bot.me.id);
             roleall.add_option(dpp::command_option(dpp::co_role, "role", "Role to distribute", true));
+            
             dpp::slashcommand clear("clear", "Delete a set of messages", bot.me.id);
             clear.add_option(dpp::command_option(dpp::co_string, "amount", "Amount of messages to clear", true));
-            dpp::slashcommand ping("ping", "Ping pong!", bot.me.id);
-            dpp::slashcommand help("help", "Show all commands!", bot.me.id);
             
-            bot.global_bulk_command_create({ roleall, clear, ping, help });
+            dpp::slashcommand ping("ping", "Ping pong!", bot.me.id);
+            
+            dpp::slashcommand help("help", "Show all commands!", bot.me.id);
+
+            dpp::slashcommand bal("sugar", "Get your balance!", bot.me.id);
+            bal.add_option(dpp::command_option(dpp::co_user, "user", "User to retrieve info about"));
+            
+            bot.global_bulk_command_create({ roleall, clear, ping, help, bal });
 
             bot.set_presence(dpp::presence(dpp::ps_online, dpp::at_watching, "the chats!"));
 	    }

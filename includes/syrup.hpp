@@ -3,4 +3,7 @@
 #include <commands/roleall.hpp>
 #include <commands/ping.hpp>
 #include <commands/clear.hpp>
+#include <commands/balance.hpp>
+#include <utils.hpp>
 #include <map>
+#include <csignal>

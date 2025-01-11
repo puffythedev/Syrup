@@ -80,9 +80,9 @@ int main() {
         if(event.adding_guild->id == "1327612626590760971"){
             dpp::embed embed = dpp::embed();
             std::string greet = readFile("bye.txt");
-            replaceAll(greet, "{user_mention}", "<@" + event.added.user_id + ">");
-            replaceAll(greet, "{user_name}", event.added.get_user()->username);
-            replaceAll(greet, "{server_name}", event.adding_guild->name);
+            replaceAll(greet, "{user_mention}", "<@" + event.removed.id + ">");
+            replaceAll(greet, "{user_name}", event.removed.username);
+            replaceAll(greet, "{server_name}", event.removing_guild->name);
             replaceAll(greet, "{channel_link_1}", "https://discord.com/channels/1327612626590760971/1327623119447527444");
             replaceAll(greet, "{channel_link_2}", "https://discord.com/channels/1327612626590760971/1327615007978033152");
             replaceAll(greet, "{channel_link_2}", "https://discord.com/channels/1327612626590760971/1327617948227076177");

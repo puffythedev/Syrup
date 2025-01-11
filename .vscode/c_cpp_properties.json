@@ -17,6 +17,23 @@
       "cStandard": "${default}",
       "cppStandard": "${default}",
       "intelliSenseMode": "linux-gcc-x64"
+    },
+    {
+      "name": "windoes",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/includes"
+      ],
+      "defines": [
+        "DPP_CORO",
+        "_DEBUG",
+        "UNICODE",
+        "_UNICODE"
+      ],
+      "windowsSdkVersion": "10.0.22621.0",
+      "cStandard": "c23",
+      "cppStandard": "c++23",
+      "intelliSenseMode": "windows-gcc-x64"
     }
   ],
   "version": 4

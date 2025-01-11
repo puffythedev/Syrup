@@ -80,7 +80,7 @@ int main() {
         if(event.removing_guild->id == "1327612626590760971"){
             dpp::embed embed = dpp::embed();
             std::string greet = readFile("bye.txt");
-            replaceAll(greet, "{user_mention}", "<@" + event.removed.id + ">");
+            replaceAll(greet, "{user_mention}", "<@" + event.removed.id.str + ">");
             replaceAll(greet, "{user_name}", event.removed.username);
             replaceAll(greet, "{server_name}", event.removing_guild->name);
             replaceAll(greet, "{channel_link_1}", "https://discord.com/channels/1327612626590760971/1327623119447527444");

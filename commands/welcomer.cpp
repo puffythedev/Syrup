@@ -1,5 +1,5 @@
 #include <dpp/dpp.h>
-#include <commands/ping.hpp>
+#include <commands/welcomer.hpp>
 
 dpp::task<void> Welcomer::Execute(dpp::cluster& bot, const dpp::slashcommand_t& event) {
 	dpp::command_interaction cmd_data = event.command.get_command_interaction();
@@ -13,7 +13,7 @@ dpp::task<void> Welcomer::Execute(dpp::cluster& bot, const dpp::slashcommand_t& 
         } else {
 	        event.reply("No user specified");
 	    }
-	} else if (subcommand.name == "cat") {
+	} else if (subcommand.name == "set") {
 	    if (!subcommand.options.empty()) {
 	        dpp::user user = event.command.get_resolved_user(subcommand.get_value<dpp::snowflake>(0));
 	        event.reply(user.get_mention() + " has now been turned into a cat."); 

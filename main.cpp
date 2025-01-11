@@ -17,7 +17,7 @@ void collect(){
     commands["roleall"] = std::move(new Roleall());
     commands["help"] = std::move(new Help());
     commands["clear"] = std::move(new Clear());
-    commands["balance"] = std::move(new Balance());
+    commands["sugar"] = std::move(new Balance());
 }
 
 int main() {
@@ -51,6 +51,25 @@ int main() {
         }
 	});
 
+    bot.on_guild_member_add([&bot](const dpp::guild_member_add_t& event) -> dpp::task<void> {
+        if(event.adding_guild->id == "1327612626590760971"){
+            dpp::embed embed = dpp::embed();
+            embed.set_description("_ _\n_ _　✦　　　　.　　　　  ➵　　　　♡\n　(✿ ˃ ˂) 　 ˳ `🥛` 　 ❀ welcome "+ event.added.get_user()->global_name +" to **The Sugar Factory**\n　♩`🍰`　﹒　◍ [01](https://discord.com/channels/1327612626590760971/1327623119447527444) [02](https://discord.com/channels/1327612626590760971/1327615007978033152) [03](https://discord.com/channels/1327612626590760971/1327617948227076177) ‹3\n　♡　﹒ 　 `🎀`✧ **Have a good time here!**\n_ _　✦　　　　.　　　　  ➵　　　　♡\n_ _");
+            dpp::message msg(dpp::snowflake("1327612627353866273"), embed);
+            bot.message_create(msg);
+        }
+        co_return;
+        /*
+_ _
+_ _　✦　　　　.　　　　  ➵　　　　♡
+　(✿ ˃ ˂) 　 ˳ `🥛` 　 ❀ farewell from **name**
+　♩`🍰`　﹒　◍ we hate to see you go :( ‹3
+　♡　﹒ 　 `🎀`✧ **We will miss you so much!**
+_ _　✦　　　　.　　　　  ➵　　　　♡
+_ _
+         */
+    });
+
     bot.on_select_click([&bot](const dpp::select_click_t & event) -> dpp::task<void> {
          if(event.custom_id == "helpcmd")
             co_await help_eventA(bot, event);
@@ -71,8 +90,24 @@ int main() {
 
             dpp::slashcommand bal("sugar", "Get your balance!", bot.me.id);
             bal.add_option(dpp::command_option(dpp::co_user, "user", "User to retrieve info about"));
+
+            dpp::slashcommand welcomer("welcome", "Welcomer commands.", bot.me.id);
+	        welcomer.add_option(
+	            dpp::command_option(dpp::co_sub_command, "toggle", "Toggle welcoming on or off.")
+	        );
+	        welcomer.add_option(
+	            dpp::command_option(dpp::co_sub_command, "set", "Sets the welcoming embed.")
+	        );
+
+            dpp::slashcommand farewell("farewell", "Fareweller commands.", bot.me.id);
+	        farewell.add_option(
+	            dpp::command_option(dpp::co_sub_command, "toggle", "Toggle farewells on or off.")
+	        );
+	        farewell.add_option(
+	            dpp::command_option(dpp::co_sub_command, "set", "Sets the farewell embed.")
+	        );
             
-            bot.global_bulk_command_create({ roleall, clear, ping, help, bal });
+            bot.global_bulk_command_create({ roleall, clear, ping, help, bal, welcomer, farewell });
 
             bot.set_presence(dpp::presence(dpp::ps_online, dpp::at_watching, "the chats!"));
 	    }

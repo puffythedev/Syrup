@@ -12,14 +12,27 @@ dpp::embed balEmbed(User &user, std::string username){
 }
 
 dpp::task<void> Balance::Execute(dpp::cluster& bot, const dpp::slashcommand_t& event) {
-    dpp::snowflake user = std::get<dpp::snowflake>(event.get_parameter("user"));
-    User user = getUser(event.command.usr.id);
-    if(user.ID == 0){
-        createUser(event.command.usr.id);
-        user = getUser(event.command.usr.id);
+    if(!sys.isAllowed(event.command.get_issuing_user().id.str())){
+        co_await event.co_reply("You're on cooldown...");
+        co_return;
     }
+    dpp::snowflake user_id = event.get_parameter("user").index() == 0 ? event.command.get_issuing_user().id : std::get<dpp::snowflake>(event.get_parameter("user"));
 
-    co_await event.co_reply(dpp::message(balEmbed(user, event.command.usr.username)));
+	dpp::user* usah = dpp::find_user(user_id);
+
+	if(!usah) {
+		co_await event.co_reply("I failed to find that user.");
+		co_return;
+	}
+
+    User user = getUser(user_id);
+    if(user.ID == 0){
+        createUser(user_id);
+        user = getUser(user_id);
+    }
+    addMoney(user_id, 10);
+
+    co_await event.co_reply(dpp::message(balEmbed(user, usah->username)));
     
     co_return;
 }

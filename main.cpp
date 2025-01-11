@@ -77,7 +77,7 @@ int main() {
     });
 
     bot.on_guild_member_remove([&bot](const dpp::guild_member_remove_t& event) -> dpp::task<void> {
-        if(event.adding_guild->id == "1327612626590760971"){
+        if(event.removing_guild->id == "1327612626590760971"){
             dpp::embed embed = dpp::embed();
             std::string greet = readFile("bye.txt");
             replaceAll(greet, "{user_mention}", "<@" + event.removed.id + ">");

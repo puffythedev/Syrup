@@ -1,5 +1,11 @@
 #include <syrup.hpp>
-
+void replaceAll(string &str, const string &from, const string &to) {
+    size_t startPos = 0;
+    while ((startPos = str.find(from, startPos)) != string::npos) {
+        str.replace(startPos, from.length(), to);
+        startPos += to.length();
+    }
+}
 std::map<std::string, Command*> commands;
 std::string readFile(std::string name) {
     std::ifstream file(name);
@@ -54,20 +60,36 @@ int main() {
     bot.on_guild_member_add([&bot](const dpp::guild_member_add_t& event) -> dpp::task<void> {
         if(event.adding_guild->id == "1327612626590760971"){
             dpp::embed embed = dpp::embed();
-            embed.set_description("_ _\n_ _　✦　　　　.　　　　  ➵　　　　♡\n　(✿ ˃ ˂) 　 ˳ `🥛` 　 ❀ welcome "+ event.added.get_user()->global_name +" to **The Sugar Factory**\n　♩`🍰`　﹒　◍ [01](https://discord.com/channels/1327612626590760971/1327623119447527444) [02](https://discord.com/channels/1327612626590760971/1327615007978033152) [03](https://discord.com/channels/1327612626590760971/1327617948227076177) ‹3\n　♡　﹒ 　 `🎀`✧ **Have a good time here!**\n_ _　✦　　　　.　　　　  ➵　　　　♡\n_ _");
+            std::string greet = readFile("hi.txt");
+            replaceAll(greet, "{user_mention}", "<@" + event.added.user_id + ">");
+            replaceAll(greet, "{server_name}", event.adding_guild->name);
+            replaceAll(greet, "{channel_link_1}", "https://discord.com/channels/1327612626590760971/1327623119447527444");
+            replaceAll(greet, "{channel_link_2}", "https://discord.com/channels/1327612626590760971/1327615007978033152");
+            replaceAll(greet, "{channel_link_2}", "https://discord.com/channels/1327612626590760971/1327617948227076177");
+            embed.set_description(greet);
+            embed.set_color(0xd638d8);
             dpp::message msg(dpp::snowflake("1327612627353866273"), embed);
             bot.message_create(msg);
         }
         co_return;
-        /*
-_ _
-_ _　✦　　　　.　　　　  ➵　　　　♡
-　(✿ ˃ ˂) 　 ˳ `🥛` 　 ❀ farewell from **name**
-　♩`🍰`　﹒　◍ we hate to see you go :( ‹3
-　♡　﹒ 　 `🎀`✧ **We will miss you so much!**
-_ _　✦　　　　.　　　　  ➵　　　　♡
-_ _
-         */
+    });
+    
+    bot.on_guild_member_remove([&bot](const dpp::guild_member_remove_t& event) -> dpp::task<void> {
+        if(event.adding_guild->id == "1327612626590760971"){
+            dpp::embed embed = dpp::embed();
+            std::string greet = readFile("bye.txt");
+            replaceAll(greet, "{user_mention}", "<@" + event.added.user_id + ">");
+            replaceAll(greet, "{user_name}", event.added.get_user()->username);
+            replaceAll(greet, "{server_name}", event.adding_guild->name);
+            replaceAll(greet, "{channel_link_1}", "https://discord.com/channels/1327612626590760971/1327623119447527444");
+            replaceAll(greet, "{channel_link_2}", "https://discord.com/channels/1327612626590760971/1327615007978033152");
+            replaceAll(greet, "{channel_link_2}", "https://discord.com/channels/1327612626590760971/1327617948227076177");
+            embed.set_description(greet);
+            embed.set_color(0xd638d8);
+            dpp::message msg(dpp::snowflake("1327612627353866273"), embed);
+            bot.message_create(msg);
+        }
+        co_return;
     });
 
     bot.on_select_click([&bot](const dpp::select_click_t & event) -> dpp::task<void> {

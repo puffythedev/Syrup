@@ -70,7 +70,7 @@ int main() {
             dpp::slashcommand help("help", "Show all commands!", bot.me.id);
 
             dpp::slashcommand bal("sugar", "Get your balance!", bot.me.id);
-            bal.add_option(dpp::command_option(dpp::co_user, "user", "User to retrieve info about"));
+            bal.add_option(dpp::command_option(dpp::co_user, "user", "User to retrieve info about", true));
             
             bot.global_bulk_command_create({ roleall, clear, ping, help, bal });
 

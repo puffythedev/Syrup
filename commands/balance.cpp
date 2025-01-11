@@ -12,7 +12,7 @@ dpp::embed balEmbed(User &user, std::string username){
 }
 
 dpp::task<void> Balance::Execute(dpp::cluster& bot, const dpp::slashcommand_t& event) {
-    dpp::snowflake role = std::get<dpp::snowflake>(event.get_parameter("user"));
+    dpp::snowflake user = std::get<dpp::snowflake>(event.get_parameter("user"));
     User user = getUser(event.command.usr.id);
     if(user.ID == 0){
         createUser(event.command.usr.id);

@@ -30,4 +30,4 @@ void addSelectMenuEmbedEditingSystem(dpp::message& msg){
 	);
 }
 
-std::map<dpp::snowflake, GuildGreeterConfig>;
+std::map<dpp::snowflake, GuildGreeterConfig> configs;

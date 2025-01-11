@@ -1,11 +1,5 @@
 #include <syrup.hpp>
-void replaceAll(string &str, const string &from, const string &to) {
-    size_t startPos = 0;
-    while ((startPos = str.find(from, startPos)) != string::npos) {
-        str.replace(startPos, from.length(), to);
-        startPos += to.length();
-    }
-}
+
 std::map<std::string, Command*> commands;
 std::string readFile(std::string name) {
     std::ifstream file(name);
@@ -24,6 +18,14 @@ void collect(){
     commands["help"] = std::move(new Help());
     commands["clear"] = std::move(new Clear());
     commands["sugar"] = std::move(new Balance());
+}
+
+void replaceAll(std::string &str, const std::string &from, const std::string &to) {
+    size_t startPos = 0;
+    while ((startPos = str.find(from, startPos)) != string::npos) {
+        str.replace(startPos, from.length(), to);
+        startPos += to.length();
+    }
 }
 
 int main() {
@@ -73,7 +75,7 @@ int main() {
         }
         co_return;
     });
-    
+
     bot.on_guild_member_remove([&bot](const dpp::guild_member_remove_t& event) -> dpp::task<void> {
         if(event.adding_guild->id == "1327612626590760971"){
             dpp::embed embed = dpp::embed();
